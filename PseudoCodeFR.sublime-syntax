@@ -37,7 +37,11 @@ contexts:
     - include: constants
     - include: builtinTypes
     - include: builtinFunctions
+    - include: fileFunctions
     - include: function-definition
+    - include: class-definition
+    - include: list-definition
+    - include: pointer
   comments:
     - match: //
       scope: punctuation.definition.comment.source.algo    
@@ -46,28 +50,28 @@ contexts:
         - match: $\n?
           pop: true
   keywords:
-    - match: \b(SI|ALORS$|SINON|FINSI$|SELON\s|FINSELON$|DEBUT$|FIN$|VARIABLE$|CONSTANTE$|^ALGORITHME\s|FINFONCTION$)\b
+    - match: \b(SI|ALORS|SINON|FINSI|SELON|FINSELON|DEBUT|FIN|VARIABLE|CONSTANTE|ALGORITHME|Retourne)\b
       scope: keyword.control.source.algo
-    - match: \b(nouveau)\b
+    - match: \bnouveau\b
       scope: keyword.operator.source.algo
-    - match: (<-)
-      scope: keyword.operator.assignment.java
+    - match: <-
+      scope: keyword.operator.assignment.algo
   logical-expression:
-    - match: '\sET\s|\sOU\s|\sOUX\s|NON'
+    - match: \b(ET|OU|OUX|NON)\b
       scope: keyword.operator.logical.algo
   loop:
-    - match: \b(POUR\s|\sDE\s|\sA\s|\sPAS\sDE\s|FAIRE$|FINPOUR$|TANTQUE|FINTANTQUE$)\b
+    - match: \b(POUR|DE|A|PAS\sDE|FAIRE|FINPOUR|TANTQUE|FINTANTQUE)\b
       scope: keyword.control.source.algo
   math:
-    - match: '\+|-|\*|/|%|<[=]?|>[=]?|=|!=|^|\&|DIV|<>'
+    - match: '\b(\+|-|\*|/|%|<[=]?|>[=]?|=|!=|^|\&|DIV|<>)\b'
       scope: keyword.operator.arithmetic.algo
     - match: '\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)([LlFfUuDd]|UL|ul)?\b'
       scope: constant.numeric.integer.algo
   constants:
     - match: \b(vrai|faux|null)\b
-      scope: constant.language.java
-    - match: \b(this)\b
-      scope: variable.language.java
+      scope: keyword.operator.word.algo
+    - match: \bthis\b
+      scope: variable.language.algo
     - match: '"'
       scope: punctuation.definition.string.begin.source.algo
       push:
@@ -87,17 +91,69 @@ contexts:
         - match: \\.
           scope: constant.character.escape.source.algo
   builtinTypes:
-    - match: \b(ENTIER|REEL|BOOLEEN|CHAINE|CARACTERE|TABLEAU)\b
-      scope: storage.type.source.algo
-  builtinFunctions:
-    - match: \b(Len|Mid|Mod|Trouve|Lire|Ecrire|Redim|Left|Right|Rand|Retourne)\b
-      scope: entity.name.function.algo
-  function-definition:
-    - match: '\b(FONCTION)\s+'
+    - match: \b(ENTIER|REEL|BOOLEEN|CHAINE|CARACTERE)\b\s*(:?)
+      captures:
+        1: storage.type.source.algo
+        2: keyword.control.source.algo
+    - match: '\b(TABLEAU)\b(<)([^>]+)(>)'
+      captures:
+        1: storage.type.source.algo
+        2: keyword.control.source.algo
+        3: storage.type.source.algo
+        4: keyword.control.source.algo
+    - match: '(\[)(\d)(\]:?)'
       captures:
         1: keyword.control.source.algo
-    - match: '\b([^\s\(]+)(?=\([^\)]*\))'
+        2: constant.numeric.integer.algo
+        3: keyword.control.source.algo   
+    - match: '(\[).+?(\]:?)'
       captures:
-        1: entity.name.function.algo
-
-
+        1: keyword.control.source.algo
+        2: keyword.control.source.algo
+  builtinFunctions:
+    - match: \b(Len|Mid|Mod|Trouve|Lire|Ecrire|Redim|Left|Right|Rand)\(\b
+      scope: entity.name.function.algo
+  fileFunctions:
+    - match: \b(Cr(e|é)er|D(e|é)truire|Ouvrir|LireFichier|EcrireFichier|FermerFichier|EOF)\(\b
+      scope: entity.name.function.algo
+    - match: \b(Lecture|Ecriture|Ajout)\b
+      scope: keyword.other.algo
+  function-definition:
+    - match: '\b(FONCTION|FINFONCTION)\b'
+      scope: keyword.control.source.algo
+    - match: '(\.)?\b([^.\s\(]+)(?=\([^\)]*\))\b'
+      captures:
+        1: keyword.control.source.algo
+        2: entity.name.function.algo
+  pointer:
+    - match: '(\@)'
+      scope: punctuation.definition.variable.algo
+    - match: \b(POINTEUR)\b(<)([^>]+)(>)
+      captures:
+        1: storage.type.source.algo
+        2: keyword.control.source.algo
+        3: storage.type.source.algo   
+        4: keyword.control.source.algo
+  class-definition:
+    - match: \b(CLASSE)\s(.+)\b
+      captures:
+        1: keyword.control.source.algo
+        2: entity.name.class
+    - match: \b(FINCLASSE|CONSTRUCTEUR|FINCONSTRUTEUR)\b
+      scope: keyword.control.source.algo
+    - match: (\.)?\b(.+?)\b(\.)
+      captures:
+        1: keyword.control.source.algo
+        2: entity.name.class
+        3: keyword.control.source.algo
+  list-definition:
+    - match: '\b(Piles|Files|Listes)\b(<)([^>]+)(>\s*:?)'
+      captures:
+        1: storage.type.source.algo
+        2: keyword.control.source.algo
+        3: storage.type.source.algo
+        4: keyword.control.source.algo
+    - match: (\.)\b(Supprime|Empiler|Depiler|IsPleine|IsVide|NbElement|ViderPile|Ajouter|Extraire|ViderFile)\b\(
+      captures:
+        1: keyword.control.source.algo
+        2: entity.name.function.algo
