@@ -23,7 +23,7 @@
 # SOFTWARE.
 # http://www.sublimetext.com/docs/3/syntax.html
 
-name: Algo IMIE - TACT factory
+name: PseudoCodeFR - IMIE - TACT factory
 file_extensions:
   - algo
 scope: source.algo
