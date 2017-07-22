@@ -53,6 +53,8 @@ contexts:
   keywords:
     - match: \b(SI|ALORS|SINON|FINSI|SELON|FINSELON|DEBUT|FIN|VARIABLE|CONSTANTE|ALGORITHME)\b
       scope: keyword.control.source.algo
+    - match: \bthis\b
+      scope: variable.language.algo
     - match: \b(nouveau|Retourne|this)\b
       scope: keyword.operator.source.algo
     - match: '<-'
@@ -107,19 +109,10 @@ contexts:
   function-definition:
     - match: '\b(FONCTION|FINFONCTION)\b'
       scope: keyword.control.source.algo
-    - match: '(\.)?\b([a-zA-Z0-1]+)(?=\([^\)]*\))\b'
+    - match: '(\.)?\b([a-zA-Z0-9_\-]+)(?=\([^\)]*\))\b'
       captures:
         1: keyword.control.source.algo
         2: entity.name.function.algo
-  pointer:
-    - match: '\@'
-      scope: punctuation.definition.variable.algo
-    - match: \b(POINTEUR)\b(<)([^>]+)(>)
-      captures:
-        1: storage.type.source.algo
-        2: keyword.control.source.algo
-        3: storage.type.source.algo   
-        4: keyword.control.source.algo
   class-definition:
     - match: \b(CLASSE)\s(.+)\b
       captures:
@@ -127,11 +120,36 @@ contexts:
         2: entity.name.class
     - match: \b(FINCLASSE|CONSTRUCTEUR|FINCONSTRUTEUR)\b
       scope: keyword.control.source.algo
-    - match: (\.)?\b([a-zA-Z0-1]+?)(\.)
+    - match: (\.)?\b([a-zA-Z0-9_\-]+?)(\.)
       captures:
         1: keyword.control.source.algo
         2: entity.name.class
         3: keyword.control.source.algo
+  table-definition:
+    - match: '\b(TABLEAU)\b(<)([^>]+)(>:?)'
+      captures:
+        1: storage.type.source.algo
+        2: keyword.control.source.algo
+        3: storage.type.source.algo
+        4: keyword.control.source.algo
+    - match: '(\[)(\d+)(\]\s*:?)'
+      captures:
+        1: keyword.control.source.algo
+        2: constant.numeric.integer.algo
+        3: keyword.control.source.algo
+    - match: '(\[).+?(\]\s*:?)'
+      captures:
+        1: keyword.control.source.algo
+        2: keyword.control.source.algo
+  pointer:
+    - match: '\@'
+      scope: punctuation.definition.variable.algo
+    - match: \b(POINTEUR)\b(<)([^>]+)(>:?)
+      captures:
+        1: storage.type.source.algo
+        2: keyword.control.source.algo
+        3: storage.type.source.algo   
+        4: keyword.control.source.algo
   list-definition:
     - match: '\b(Piles|Files|Listes)(<)([^>]+)(>\s*:?)'
       captures:
@@ -143,19 +161,3 @@ contexts:
       captures:
         1: keyword.control.source.algo
         2: entity.name.function.algo
-  table-definition:
-    - match: '\b(TABLEAU)\b(<)([^>]+)(>:?)'
-      captures:
-        1: storage.type.source.algo
-        2: keyword.control.source.algo
-        3: storage.type.source.algo
-        4: keyword.control.source.algo
-    - match: '(\[)(\d)(\]:?)'
-      captures:
-        1: keyword.control.source.algo
-        2: constant.numeric.integer.algo
-        3: keyword.control.source.algo   
-    - match: '(\[).+?(\]:?)'
-      captures:
-        1: keyword.control.source.algo
-        2: keyword.control.source.algo
