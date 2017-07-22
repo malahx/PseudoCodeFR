@@ -23,7 +23,7 @@
 # SOFTWARE.
 # http://www.sublimetext.com/docs/3/syntax.html
 
-name: PseudoCodeFR - IMIE - TACT factory
+name: PseudoCodeFR - IMIE - TACT factory v1.0.1
 file_extensions:
   - algo
 scope: source.algo
@@ -107,7 +107,7 @@ contexts:
   function-definition:
     - match: '\b(FONCTION|FINFONCTION)\b'
       scope: keyword.control.source.algo
-    - match: '(\.)?\b([^.\s\(]+)(?=\([^\)]*\))\b'
+    - match: '(\.)?\b([a-zA-Z0-1]+)(?=\([^\)]*\))\b'
       captures:
         1: keyword.control.source.algo
         2: entity.name.function.algo
@@ -127,7 +127,7 @@ contexts:
         2: entity.name.class
     - match: \b(FINCLASSE|CONSTRUCTEUR|FINCONSTRUTEUR)\b
       scope: keyword.control.source.algo
-    - match: (\.)?\b(.+?)(\.)
+    - match: (\.)?\b([a-zA-Z0-1]+?)(\.)
       captures:
         1: keyword.control.source.algo
         2: entity.name.class
